@@ -1,0 +1,225 @@
+@layer components {
+  .hero {
+    position: relative;
+    min-height: 760px;
+    height: 100svh;
+    max-height: 1200px;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+  }
+  .hero-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+    z-index: -3;
+  }
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(
+        180deg,
+        #07111830 4%,
+        transparent 28%,
+        #09131c38 49%,
+        #0c1419a8 82%,
+        #101719 100%
+      ),
+      linear-gradient(90deg, #11171d18, #10172038 45%, #11182000);
+  }
+  .hero-center {
+    text-align: center;
+    padding-top: 115px;
+    width: min(780px, 90%);
+    text-shadow: 0 3px 28px #080e19cc;
+  }
+  .hero-eyebrow {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    color: #ffe1f1;
+    font-size: 10px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow span {
+    width: 28px;
+    height: 1px;
+    background: #ffe1f180;
+  }
+  .hero h1 {
+    font-size: clamp(70px, 8.4vw, 136px);
+    letter-spacing: 0.09em;
+    line-height: 1;
+    padding-left: 0.09em;
+    color: #fff0f9;
+    filter: drop-shadow(0 2px 8px #172335);
+  }
+  .hero h1 > span {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(13px, 1.5vw, 23px);
+    letter-spacing: 0.56em;
+    margin-top: 18px;
+  }
+  .hero-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    color: var(--accent);
+    margin: 27px auto 18px;
+    font-size: 20px;
+  }
+  .hero-ornament span {
+    width: 85px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ed97c2a0);
+  }
+  .hero-ornament span:last-child {
+    rotate: 180deg;
+  }
+  .hero-tagline {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 23px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    color: #fff6fc;
+  }
+  .hero .button {
+    text-shadow: none;
+    min-width: 245px;
+  }
+  .play-icon {
+    font-size: 23px;
+    line-height: 1;
+  }
+  .hero-side {
+    position: absolute;
+    left: 32px;
+    top: 48%;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 8px;
+    letter-spacing: 0.23em;
+    color: #e8e9e3bb;
+  }
+  .hero-bottom {
+    position: absolute;
+    bottom: 32px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    font-size: 8px;
+    letter-spacing: 0.17em;
+    color: #d1d2cbb3;
+  }
+  .hero-bottom .status-dot {
+    margin-right: 9px;
+  }
+  .scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-cue span {
+    font-size: 24px;
+    color: var(--accent);
+  }
+}
+@layer responsive {
+  @media (min-width: 1700px) {
+    .hero-center {
+      padding-top: 140px;
+    }
+  }
+  @media (max-width: 800px) {
+    .hero-bottom {
+      left: 24px;
+      right: 24px;
+    }
+    .hero-bottom > span {
+      font-size: 7px;
+    }
+    .hero-side {
+      left: 18px;
+    }
+  }
+  @media (max-width: 600px) {
+    .hero {
+      min-height: 740px;
+      height: 100svh;
+      max-height: 950px;
+    }
+    .hero-art {
+      object-position: 57% 30%;
+    }
+    .hero-shade {
+      background: linear-gradient(
+        180deg,
+        #10171940,
+        #10171918 25%,
+        #0a142055 47%,
+        #101719c4 78%,
+        #101719 100%
+      );
+    }
+    .hero-center {
+      padding-top: 180px;
+      width: calc(100% - 30px);
+    }
+    .hero h1 {
+      font-size: clamp(52px, 14vw, 83px);
+      letter-spacing: 0.055em;
+    }
+    .hero h1 > span {
+      font-size: 12px;
+      letter-spacing: 0.43em;
+      margin-top: 15px;
+    }
+    .hero-eyebrow {
+      font-size: 8px;
+      gap: 14px;
+      margin-bottom: 19px;
+    }
+    .hero-tagline {
+      font-size: 21px;
+    }
+    .hero-ornament {
+      margin-top: 23px;
+      margin-bottom: 16px;
+    }
+    .hero-side {
+      display: none;
+    }
+    .hero-bottom > span {
+      display: none;
+    }
+    .hero-bottom {
+      justify-content: center;
+      bottom: 20px;
+    }
+    .scroll-cue {
+      font-size: 7px;
+      gap: 5px;
+    }
+    .hero .button {
+      min-height: 52px;
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 600px) {
+    .hero-art {
+      object-position: 76% 30%;
+    }
+  }
+}

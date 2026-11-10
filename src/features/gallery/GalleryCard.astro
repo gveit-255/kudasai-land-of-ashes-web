@@ -1,0 +1,36 @@
+---
+import { getImage } from 'astro:assets';
+import { images } from '@/assets/images';
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+import type { GalleryItem } from './gallery.types';
+
+interface Props {
+  item: GalleryItem;
+  index: number;
+}
+const { item, index } = Astro.props;
+const href = (await getImage({ src: images[item.image], format: 'webp', quality: 90 })).src;
+---
+
+<figure class="gallery-item" data-category={item.category} data-reveal>
+  <a
+    class="gallery-open"
+    href={href}
+    data-fit={item.fit}
+    data-title={item.title}
+    data-alt={item.alt}
+    aria-label={`Ampliar: ${item.title}`}
+  >
+    <ResponsiveImage name={item.image} alt={item.alt} sizes="(max-width: 1000px) 50vw, 33vw" />
+    <span class="gallery-icon" aria-hidden="true">
+      ↗
+    </span>
+  </a>
+  <figcaption>
+    <div>
+      <h3>{item.title}</h3>
+      <p>{item.subtitle}</p>
+    </div>
+    <span class="item-index">{String(index + 1).padStart(2, '0')}</span>
+  </figcaption>
+</figure>

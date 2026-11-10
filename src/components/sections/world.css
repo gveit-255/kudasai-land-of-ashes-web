@@ -1,0 +1,120 @@
+@layer components {
+  .world {
+    background: var(--ink-deep);
+    border-block: 1px solid #cbb59a0b;
+  }
+  .world-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .world-place {
+    position: relative;
+    aspect-ratio: 1.15;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .world-place > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s;
+  }
+  .world-place:first-child > img {
+    object-position: 40% center;
+  }
+  .world-place:hover img {
+    transform: scale(1.035);
+  }
+  .world-overlay {
+    position: absolute;
+    inset: 0;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    background: linear-gradient(transparent 25%, #091215ec 100%);
+  }
+  .world-overlay .eyebrow {
+    margin-bottom: 14px;
+    font-size: 9px;
+    color: #ffc1e1;
+  }
+  .world-overlay h3 {
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .round-arrow {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e6a6c86b;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  .world-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 24px;
+  }
+  .world-note span:nth-child(2) {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+  }
+  .world-note span:last-child {
+    margin-left: auto;
+  }
+  .tiny-diamond {
+    color: var(--accent);
+    font-size: 19px;
+  }
+}
+@layer responsive {
+  @media (max-width: 800px) {
+    .world-overlay {
+      padding: 20px;
+    }
+    .world-overlay h3 {
+      font-size: 29px;
+    }
+    .round-arrow {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .world-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .world-place {
+      aspect-ratio: 1.1;
+    }
+    .world-overlay {
+      padding: 25px;
+    }
+    .world-overlay h3 {
+      font-size: 35px;
+    }
+    .round-arrow {
+      display: grid;
+      bottom: 25px;
+      right: 25px;
+    }
+    .world-note {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .world-note span:last-child {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }
+}

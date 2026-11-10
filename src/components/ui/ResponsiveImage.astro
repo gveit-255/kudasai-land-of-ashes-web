@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import { images, type ImageName } from '@/assets/images';
+
+interface Props {
+  name: ImageName;
+  alt: string;
+  class?: string;
+  priority?: boolean;
+  art?: boolean;
+  sizes?: string;
+}
+const {
+  name,
+  alt,
+  class: className,
+  priority = false,
+  sizes = '(max-width: 700px) 100vw, 60vw',
+} = Astro.props;
+const src = images[name];
+const widths = [...new Set([640, 1100, src.width].map((width) => Math.min(width, src.width)))].sort(
+  (a, b) => a - b,
+);
+---
+
+<Image
+  src={src}
+  alt={alt}
+  class={className}
+  widths={widths}
+  sizes={sizes}
+  format="webp"
+  quality={88}
+  loading={priority ? 'eager' : 'lazy'}
+  fetchpriority={priority ? 'high' : 'auto'}
+  decoding="async"
+/>

@@ -1,0 +1,49 @@
+---
+import '@/features/navigation/navigation.css';
+import { navigation } from '@/config/site';
+---
+
+<site-navigation>
+  <header class="site-header">
+    <a href="#inicio" class="wordmark" aria-label="Kudasai — inicio">
+      KUDASAI<span>LAND OF ASHES</span>
+    </a>
+    <nav aria-label="Navegación principal" id="main-navigation">
+      {navigation.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+      <a href="#estado" class="nav-status">
+        <span class="status-dot" aria-hidden="true"></span> En desarrollo
+      </a>
+    </nav>
+    <div class="header-end">
+      <button
+        hidden
+        class="motion-toggle"
+        type="button"
+        data-motion-toggle
+        aria-label="Pausar animaciones"
+        aria-pressed="false"
+      >
+        <span aria-hidden="true">Ⅱ</span>
+      </button>
+
+      <button
+        hidden
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        aria-label="Abrir menú"
+      >
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+</site-navigation>
+
+<script>
+  import { SiteNavigation } from '@/features/navigation/menu.controller';
+  if (!customElements.get('site-navigation'))
+    customElements.define('site-navigation', SiteNavigation);
+</script>

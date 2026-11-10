@@ -1,0 +1,19 @@
+@layer tokens {
+  :root {
+    --ink: #fff5fa;
+    --ink-deep: #f6edf9;
+    --paper: #432a43;
+    --muted: #765b71;
+    --accent: #b02c6c;
+    --line: #d591b45c;
+    --surface: #fffcfe;
+    --surface-soft: #fce5f1;
+    --button-fill: #f4a7d0;
+    --button-ink: #4a2440;
+    --on-art: #fff6fc;
+    --on-art-muted: #f0dce9;
+    --card-shadow: 0 9px 30px #8f447514;
+    --display: 'Nunito', 'Hiragino Maru Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+    --sans: 'Nunito', 'Hiragino Maru Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+  }
+}

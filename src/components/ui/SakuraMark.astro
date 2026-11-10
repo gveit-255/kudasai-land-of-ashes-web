@@ -1,0 +1,25 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  class:list={['sakura-mark', className]}
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  aria-hidden="true"
+  focusable="false"
+>
+  <g fill="currentColor">
+    {[0, 72, 144, 216, 288].map((angle) => (
+      <path
+        d="M12 12C7 9 7 3 10 2L12 4L14 2C17 3 17 9 12 12Z"
+        transform={`rotate(${angle} 12 12)`}
+      />
+    ))}
+  </g>
+  <circle cx="12" cy="12" r="1.7" fill="#fff6fc" />
+</svg>

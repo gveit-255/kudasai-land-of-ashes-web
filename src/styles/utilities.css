@@ -1,0 +1,70 @@
+@layer components {
+  .download-note {
+    font-size: 8px;
+    letter-spacing: 0.13em;
+    color: #bcb9ab;
+    margin-top: 15px;
+  }
+  .not-found {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+    padding: 30px;
+  }
+  .not-found h1 {
+    font-size: clamp(40px, 6vw, 75px);
+    line-height: 1.15;
+  }
+}
+@layer responsive {
+  @media (min-width: 1700px) {
+    .container {
+      width: min(1320px, calc(100% - 180px));
+    }
+  }
+  @media (max-width: 1100px) {
+    .container {
+      width: calc(100% - 80px);
+    }
+  }
+  @media (max-width: 800px) {
+    .container {
+      width: calc(100% - 48px);
+    }
+    .section {
+      padding-top: 100px;
+      padding-bottom: 70px;
+    }
+    .section-number {
+      left: 24px;
+      top: 28px;
+    }
+    .section-heading {
+      gap: 25px;
+    }
+    .section-heading > p {
+      max-width: 240px;
+      font-size: 12px;
+    }
+  }
+  @media (max-width: 600px) {
+    html {
+      scroll-padding-top: 24px;
+    }
+    .section-heading {
+      display: block;
+      margin-bottom: 30px;
+    }
+    .section-heading > p {
+      max-width: 100%;
+      margin-top: 22px;
+    }
+    .section-heading .eyebrow {
+      margin-bottom: 18px;
+    }
+  }
+}

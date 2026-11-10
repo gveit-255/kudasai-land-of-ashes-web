@@ -1,0 +1,12 @@
+node_modules
+dist
+.astro
+.wrangler
+qa
+tools
+public/media
+package-lock.json
+ABRIR-WEB.html
+archive
+
+public/demo

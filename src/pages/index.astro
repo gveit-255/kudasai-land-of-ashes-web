@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import HeroSection from '@/components/sections/HeroSection.astro';
+import StorySection from '@/components/sections/StorySection.astro';
+import WorldSection from '@/components/sections/WorldSection.astro';
+import CharactersSection from '@/components/sections/CharactersSection.astro';
+import GallerySection from '@/components/sections/GallerySection.astro';
+import ClosingSection from '@/components/sections/ClosingSection.astro';
+---
+
+<BaseLayout>
+  <SiteHeader />
+  <main id="contenido">
+    <HeroSection />
+    <StorySection />
+    <WorldSection />
+    <CharactersSection />
+    <GallerySection />
+    <ClosingSection />
+  </main>
+  <SiteFooter />
+</BaseLayout>

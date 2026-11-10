@@ -1,0 +1,22 @@
+---
+import { site } from '@/config/site';
+import './footer.css';
+---
+
+<footer class="footer container">
+  <a href="#inicio" class="wordmark">
+    KUDASAI<span>LAND OF ASHES</span>
+  </a>
+  <p>
+    © {new Date().getFullYear()} {site.studio}
+    <br />
+    <span>Kudasai: Land of Ashes</span>
+  </p>
+  <a href="#inicio" class="back-top">
+    VOLVER ARRIBA <span aria-hidden="true">↑</span>
+  </a>
+</footer>
+
+<a class="floating-top" href="#inicio" data-scroll-top hidden aria-label="Volver al inicio">
+  <span aria-hidden="true">↑</span>
+</a>

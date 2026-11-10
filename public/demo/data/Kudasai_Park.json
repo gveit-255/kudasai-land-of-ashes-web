@@ -1,0 +1,119 @@
+{
+  "maps": [
+    8,
+    16,
+    17,
+    24,
+    25,
+    26
+  ],
+  "bounds": {
+    "x": 37,
+    "y": 16,
+    "w": 13,
+    "h": 10
+  },
+  "lawns": [
+    {
+      "x": 37,
+      "y": 16,
+      "w": 5,
+      "h": 3
+    },
+    {
+      "x": 45,
+      "y": 16,
+      "w": 5,
+      "h": 3
+    },
+    {
+      "x": 37,
+      "y": 23,
+      "w": 5,
+      "h": 3
+    },
+    {
+      "x": 45,
+      "y": 23,
+      "w": 5,
+      "h": 3
+    }
+  ],
+  "objects": [
+    {
+      "kind": 0,
+      "x": 42,
+      "y": 20,
+      "w": 3,
+      "h": 2
+    },
+    {
+      "kind": 2,
+      "x": 40,
+      "y": 18,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "kind": 2,
+      "x": 40,
+      "y": 23,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "kind": 2,
+      "x": 45,
+      "y": 18,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "kind": 2,
+      "x": 45,
+      "y": 23,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "kind": 3,
+      "x": 39,
+      "y": 16,
+      "w": 3,
+      "h": 2,
+      "asset": "Kudasai_Parterre_Referencia_Detalle_20261102",
+      "displayWidth": 144,
+      "offsetY": -24
+    },
+    {
+      "kind": 3,
+      "x": 39,
+      "y": 24,
+      "w": 3,
+      "h": 2,
+      "asset": "Kudasai_Parterre_Referencia_Detalle_20261102",
+      "displayWidth": 144,
+      "offsetY": 0
+    },
+    {
+      "kind": 3,
+      "x": 45,
+      "y": 16,
+      "w": 3,
+      "h": 2,
+      "asset": "Kudasai_Parterre_Referencia_Detalle_20261102",
+      "displayWidth": 144,
+      "offsetY": -24
+    },
+    {
+      "kind": 3,
+      "x": 45,
+      "y": 24,
+      "w": 3,
+      "h": 2,
+      "asset": "Kudasai_Parterre_Referencia_Detalle_20261102",
+      "displayWidth": 144,
+      "offsetY": 0
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+---
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+import './demo.css';
+---
+
+<demo-player>
+  <div class="demo-stage" data-demo-stage aria-label="Demo jugable de Kudasai">
+    <div class="demo-poster" data-demo-poster>
+      <ResponsiveImage
+        name="key-art"
+        art
+        priority
+        sizes="(max-width: 1000px) 100vw, 1100px"
+        alt="Libu y Loussiana bajo la luna, frente a las ruinas y las cascadas."
+      />
+      <div class="demo-poster-copy">
+        <p class="eyebrow">EL VIAJE EMPIEZA AQUÍ</p>
+        <a class="button button-primary" href="/demo/index.html" data-demo-start>
+          Jugar demo <span aria-hidden="true">▷</span>
+        </a>
+        <p>La primera carga puede tardar. Recomendamos jugar con teclado y auriculares.</p>
+      </div>
+    </div>
+    <div class="demo-frame" data-demo-frame></div>
+  </div>
+  <div class="demo-toolbar">
+    <p role="status" aria-live="polite" data-demo-status>
+      Lista para comenzar. El juego se carga al pulsar «Jugar demo».
+    </p>
+    <div>
+      <button type="button" data-demo-fullscreen hidden>
+        Pantalla completa ↗
+      </button>
+      <button type="button" data-demo-stop hidden>
+        Cerrar demo ×
+      </button>
+    </div>
+  </div>
+</demo-player>
+
+<script>
+  import { DemoPlayer } from './demo.controller';
+  if (!customElements.get('demo-player')) customElements.define('demo-player', DemoPlayer);
+</script>

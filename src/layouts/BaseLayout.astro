@@ -1,0 +1,67 @@
+---
+import { site } from '@/config/site';
+import roundedFont from '@/assets/fonts/nunito-latin.woff2?url';
+import '../styles/global.css';
+import '@/features/motion/motion.css';
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+const { title = site.title, description = site.description, noindex = false } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImage = Astro.site
+  ? new URL('/media/social.jpg', Astro.site).href
+  : '/media/social.jpg';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <style is:inline>
+      @layer reset, tokens, base, components, motion, theme, responsive;
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fff5fa" />
+    <meta name="color-scheme" content="light" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="Libu y Loussiana bajo la luna de Kudasai." />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preload" href={roundedFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">
+      Saltar al contenido
+    </a>
+    <slot />
+    <site-motion>
+      <div class="opening" data-opening-overlay hidden>
+        <div class="opening-veil" aria-hidden="true"></div>
+        <div class="opening-emblem" aria-hidden="true">
+          <div>
+            <strong>KUDASAI</strong>
+            <small>LAND OF ASHES</small>
+          </div>
+        </div>
+        <button type="button" class="opening-skip" data-opening-skip>
+          Saltar introducción <span>Esc</span>
+        </button>
+      </div>
+    </site-motion>
+    <script>
+      import { SiteMotion } from '@/features/motion/motion.controller';
+      if (!customElements.get('site-motion')) customElements.define('site-motion', SiteMotion);
+    </script>
+  </body>
+</html>

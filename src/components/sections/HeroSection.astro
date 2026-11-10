@@ -1,0 +1,61 @@
+---
+import './hero.css';
+import SakuraMark from '@/components/ui/SakuraMark.astro';
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+---
+
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="hero-visual">
+    <ResponsiveImage
+      name="key-art"
+      art
+      priority
+      sizes="(max-aspect-ratio: 1672/920) 182vh, 100vw"
+      class="hero-art"
+      alt="Libu y Loussiana frente a las cascadas y las ruinas de un castillo bajo la luna llena."
+    />
+  </div>
+  <div class="hero-shade"></div>
+  <div class="hero-effects" aria-hidden="true">
+    {Array.from({ length: 8 }, (_, i) => (
+      <span style={`--i:${i}`}></span>
+    ))}
+  </div>
+  <div class="hero-side" aria-hidden="true">
+    UN MUNDO ENTRE LA LUZ Y LAS CENIZAS
+  </div>
+  <div class="hero-center">
+    <p class="eyebrow hero-eyebrow" data-opening="eyebrow">
+      <SakuraMark />{' '}
+      <span lang="ja" aria-hidden="true">
+        クダサイ
+      </span>{' '}
+      <span aria-hidden="true">♡</span> UNA AVENTURA RPG
+    </p>
+    <h1 id="hero-title" data-opening="title">
+      KUDASAI<span>LAND OF ASHES</span>
+    </h1>
+    <div class="hero-ornament" data-opening="rule" aria-hidden="true">
+      <span></span>
+      <SakuraMark />
+      <span></span>
+    </div>
+    <p class="hero-tagline" data-opening="copy">
+      Incluso entre las cenizas,
+      <br />
+      algo merece ser protegido.
+    </p>
+    <a class="button button-primary" data-opening="action" href="/jugar/">
+      <span class="play-icon" aria-hidden="true">
+        ▷
+      </span>{' '}
+      Jugar demo 
+    </a>
+  </div>
+  <div class="hero-bottom">
+    <span>
+      <i class="status-dot" aria-hidden="true"></i> UN MUNDO EN CONSTRUCCIÓN
+    </span>
+    <span>POR MOONGLADE INTERACTIVE</span>
+  </div>
+</section>

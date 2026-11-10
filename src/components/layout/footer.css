@@ -1,0 +1,103 @@
+@layer components {
+  .closing {
+    position: relative;
+    min-height: 620px;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+    text-align: center;
+  }
+  .closing > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 52%;
+    z-index: -3;
+  }
+  .closing-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(#0c1214 0%, #0c171aca 30%, #101719c9 73%, #101719 100%);
+  }
+  .closing-copy {
+    padding: 80px 20px;
+  }
+  .closing-copy .eyebrow {
+    margin-bottom: 26px;
+  }
+  .closing-copy .eyebrow .status-dot {
+    margin-right: 7px;
+  }
+  .closing-copy h2 {
+    font-size: clamp(44px, 5vw, 68px);
+  }
+  .closing-copy > p:not(.eyebrow, .download-note) {
+    color: #c4c8c0;
+    font-size: 13px;
+    margin: 26px 0;
+  }
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding-block: 38px;
+    border-top: 1px solid var(--line);
+  }
+  .footer .wordmark {
+    font-size: 24px;
+  }
+  .footer > p {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .footer > p span {
+    color: #a6ada970;
+  }
+  .back-top {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+  .back-top span {
+    color: var(--accent);
+    font-size: 22px;
+  }
+}
+@layer responsive {
+  @media (max-width: 600px) {
+    .closing {
+      min-height: 590px;
+    }
+    .closing-copy h2 {
+      font-size: 48px;
+    }
+    .closing-copy > p:not(.eyebrow, .download-note) {
+      font-size: 12px;
+    }
+    .footer {
+      flex-wrap: wrap;
+      gap: 28px;
+      padding-block: 30px;
+    }
+    .footer .wordmark {
+      font-size: 21px;
+    }
+    .footer > p {
+      text-align: right;
+      font-size: 8px;
+    }
+    .back-top {
+      border-top: 1px solid var(--line);
+      padding-top: 15px;
+      flex-basis: 100%;
+      justify-content: space-between;
+    }
+  }
+}

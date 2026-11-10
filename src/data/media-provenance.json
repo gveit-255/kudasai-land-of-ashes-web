@@ -1,0 +1,62 @@
+[
+  {
+    "name": "key-art",
+    "source": "img\\titles1\\Kudasai_Libu_Loussiana.png",
+    "originalSize": [1672, 920]
+  },
+  {
+    "name": "forest",
+    "source": "Imagen menu.png",
+    "originalSize": [1536, 1024]
+  },
+  {
+    "name": "alba",
+    "source": "work\\dungeon-sin-haces-guia-20261108\\guia-mapa-8.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "cave",
+    "source": "work\\dungeon-sin-haces-guia-20261108\\dungeon-0.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "cave-depths",
+    "source": "work\\dungeon-sin-haces-guia-20261108\\dungeon-2.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "council",
+    "source": "work\\vecinos-casas-alba-20261108\\juego-004.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "inn",
+    "source": "work\\vecinos-casas-alba-20261108\\juego-010.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "dialogue",
+    "source": "work\\vecinos-casas-alba-20261108\\dialogo-9-8.png",
+    "originalSize": [1280, 720]
+  },
+  {
+    "name": "urnao",
+    "source": "Retrato anime con tirantes de cuero.png",
+    "originalSize": [1310, 1200]
+  },
+  {
+    "name": "norte",
+    "source": "Retrato de aventurero de cabello plateado.png",
+    "originalSize": [1254, 1254]
+  },
+  {
+    "name": "akemi",
+    "source": "Científica rubia con frasco azul.png",
+    "originalSize": [1024, 1535]
+  },
+  {
+    "name": "black-neko",
+    "source": "Gato negro de mirada serena.png",
+    "originalSize": [1024, 1535]
+  }
+]

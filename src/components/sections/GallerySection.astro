@@ -1,0 +1,66 @@
+---
+import JapaneseLabel from '@/components/ui/JapaneseLabel.astro';
+import { gallery } from '@/features/gallery/gallery.data';
+import type { GalleryFilter } from '@/features/gallery/gallery.types';
+import GalleryCard from '@/features/gallery/GalleryCard.astro';
+import GalleryLightbox from '@/features/gallery/GalleryLightbox.astro';
+import '@/features/gallery/gallery.css';
+
+const filters = [
+  { value: 'all', label: 'Todo' },
+  { value: 'juego', label: 'In game' },
+  { value: 'arte', label: 'Arte' },
+] satisfies { value: GalleryFilter; label: string }[];
+---
+
+<media-gallery>
+  <section class="gallery section" id="galeria" aria-labelledby="gallery-title">
+    <div class="section-number" aria-hidden="true">
+      04 <span>GALERÍA</span>
+    </div>
+    <div class="container">
+      <div class="section-heading" data-reveal>
+        <div>
+          <JapaneseLabel text="ギャラリー" />
+          <p class="eyebrow">UNA VENTANA A KUDASAI</p>
+          <h2 id="gallery-title">
+            Mira más <em>de cerca.</em>
+          </h2>
+        </div>
+        <p>Capturas reales del juego e ilustraciones. Descubre los detalles de este mundo.</p>
+      </div>
+      <div class="gallery-toolbar" data-gallery-filters>
+        <div class="filters" role="group" aria-label="Filtrar galería">
+          {filters.map((filter) => (
+            <button type="button" data-filter={filter.value} aria-pressed={filter.value === 'all'}>
+              {filter.label}{' '}
+              <span>
+                {String(
+                  filter.value === 'all'
+                    ? gallery.length
+                    : gallery.filter((item) => item.category === filter.value).length,
+                ).padStart(2, '0')}
+              </span>
+            </button>
+          ))}
+        </div>
+        <p data-gallery-count aria-live="polite">
+          {gallery.length} imágenes
+        </p>
+      </div>
+      <div class="gallery-grid">
+        {gallery.map((item, index) => (
+          <GalleryCard item={item} index={index} />
+        ))}
+      </div>
+      <p class="gallery-disclaimer">
+        Capturas de una versión en desarrollo. El contenido y el aspecto pueden cambiar.
+      </p>
+    </div>
+    <GalleryLightbox />
+  </section>
+</media-gallery>
+<script>
+  import { MediaGallery } from '@/features/gallery/gallery.controller';
+  if (!customElements.get('media-gallery')) customElements.define('media-gallery', MediaGallery);
+</script>

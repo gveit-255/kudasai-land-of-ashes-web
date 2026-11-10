@@ -1,0 +1,47 @@
+---
+import JapaneseLabel from '@/components/ui/JapaneseLabel.astro';
+import './story.css';
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+---
+
+<section class="story section" id="historia" aria-labelledby="story-title">
+  <div class="section-number" aria-hidden="true">
+    01 <span>HISTORIA</span>
+  </div>
+  <div class="story-grid container">
+    <div class="story-copy" data-reveal>
+      <JapaneseLabel text="ものがたり" />
+      <p class="eyebrow">MÁS ALLÁ DE LAS CENIZAS</p>
+      <h2 id="story-title">
+        Hay caminos que
+        <br />
+        cambian <em>un destino.</em>
+      </h2>
+      <div class="short-rule"></div>
+      <p>
+        Un bosque al atardecer. Una ciudad que guarda sus propias historias. El eco de unos pasos
+        bajo la tierra.
+      </p>
+      <p>
+        Entra en el mundo de Kudasai junto a Loussiana. Recorre Alba, conoce a quienes la habitan y
+        adéntrate en los rincones donde la luz apenas llega.
+      </p>
+      <p class="story-ending">Cada viaje empieza con un primer paso.</p>
+      <a href="#mundo" class="text-link">
+        EXPLORA EL MUNDO <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <figure class="story-visual" data-reveal>
+      <ResponsiveImage
+        name="forest"
+        art
+        sizes="(max-width: 700px) 100vw, 48vw"
+        alt="Loussiana se aleja por un camino entre pinos, hacia la luz cálida del atardecer."
+      />
+      <figcaption>
+        <span>LOUSSIANA</span> Un camino por descubrir <span aria-hidden="true">01 / 02</span>
+      </figcaption>
+      <span class="image-corner" aria-hidden="true"></span>
+    </figure>
+  </div>
+</section>

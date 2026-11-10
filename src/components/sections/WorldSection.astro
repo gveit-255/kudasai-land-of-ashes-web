@@ -1,0 +1,71 @@
+---
+import JapaneseLabel from '@/components/ui/JapaneseLabel.astro';
+import './world.css';
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+---
+
+<section class="world section" id="mundo" aria-labelledby="world-title">
+  <div class="section-number" aria-hidden="true">
+    02 <span>EL MUNDO</span>
+  </div>
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <div>
+        <JapaneseLabel text="せかい" />
+        <p class="eyebrow">LUGARES CON ALMA</p>
+        <h2 id="world-title">
+          La calma. La sombra.
+          <br />
+          <em>Y todo lo que hay entre ellas.</em>
+        </h2>
+      </div>
+      <p>
+        De las calles de Alba a las profundidades de la Gruta de los Ecos. Un mundo que se descubre
+        paso a paso.
+      </p>
+    </div>
+    <div class="world-grid">
+      <a href="#galeria" class="world-place" data-reveal>
+        <ResponsiveImage
+          name="alba"
+          alt="Casas con jardines en la ciudad de Alba, en una captura del juego."
+        />
+        <div class="world-overlay">
+          <span class="eyebrow">01 — ALBA</span>
+          <h3>
+            Donde las historias
+            <br />
+            se encuentran.
+          </h3>
+          <span class="round-arrow" aria-hidden="true">
+            ↗
+          </span>
+        </div>
+      </a>
+      <a href="#galeria" class="world-place" data-reveal>
+        <ResponsiveImage
+          name="cave"
+          alt="Galerías oscuras de la Gruta de los Ecos con antorchas azules."
+        />
+        <div class="world-overlay">
+          <span class="eyebrow">02 — GRUTA DE LOS ECOS</span>
+          <h3>
+            Escucha lo que
+            <br />
+            guarda la oscuridad.
+          </h3>
+          <span class="round-arrow" aria-hidden="true">
+            ↗
+          </span>
+        </div>
+      </a>
+    </div>
+    <div class="world-note">
+      <span class="tiny-diamond" aria-hidden="true">
+        ◇
+      </span>
+      <span>ESCENARIOS REALES DEL JUEGO</span>
+      <span>Imágenes de una versión en desarrollo.</span>
+    </div>
+  </div>
+</section>

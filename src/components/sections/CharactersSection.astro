@@ -1,0 +1,96 @@
+---
+import JapaneseLabel from '@/components/ui/JapaneseLabel.astro';
+import SakuraMark from '@/components/ui/SakuraMark.astro';
+import './characters.css';
+import { characterPortraits } from '@/data/characters';
+import ResponsiveImage from '@/components/ui/ResponsiveImage.astro';
+---
+
+<section class="characters section" id="personajes" aria-labelledby="characters-title">
+  <div class="section-number" aria-hidden="true">
+    03 <span>PERSONAJES</span>
+  </div>
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <div>
+        <JapaneseLabel text="キャラクター" />
+        <p class="eyebrow">LEALTADES QUE CRUZAN CAMINOS.</p>
+        <h2 id="characters-title">
+          Nombres que dejan <em>huella.</em>
+        </h2>
+      </div>
+      <span class="ornament" aria-hidden="true">
+        <SakuraMark />
+      </span>
+    </div>
+    <div class="character-grid">
+      <article class="character character-libu" data-motion-scene>
+        <div class="character-art">
+          <ResponsiveImage
+            name="key-art"
+            art
+            alt="Libu, de cabello castaño y capa oscura con detalles dorados."
+          />
+        </div>
+        <span class="character-watermark" aria-hidden="true">
+          LIBU
+        </span>
+        <div class="character-copy">
+          <p class="eyebrow">01 / PERSONAJES</p>
+          <h3>
+            Libu<span>リブ</span>
+          </h3>
+          <p>
+            Una capa oscura. Una mirada hacia el horizonte. Su camino forma parte de la historia de
+            Kudasai.
+          </p>
+        </div>
+      </article>
+      <article class="character character-loussiana" data-motion-scene>
+        <div class="character-art">
+          <ResponsiveImage
+            name="key-art"
+            art
+            alt="Loussiana, de cabello oscuro con puntas carmesí, abrigo morado y katana."
+          />
+        </div>
+        <span class="character-watermark" aria-hidden="true">
+          LOUSSIANA
+        </span>
+        <div class="character-copy">
+          <p class="eyebrow">02 / PERSONAJES</p>
+          <h3>
+            Loussiana<span>ルシアナ</span>
+          </h3>
+          <p>
+            El abrigo al viento y una katana a su lado. Acompaña sus pasos desde las calles de Alba
+            hasta las profundidades de la gruta.
+          </p>
+        </div>
+      </article>
+      {characterPortraits.map((character, index) => (
+        <article
+          class="character character-portrait"
+          aria-labelledby={`character-${character.id}`}
+          data-reveal
+        >
+          <div class="character-art">
+            <ResponsiveImage
+              name={character.image}
+              alt={character.alt}
+              sizes="(max-width: 600px) calc(100vw - 48px), (max-width: 1100px) 45vw, 580px"
+            />
+          </div>
+          <div class="character-copy">
+            <p class="eyebrow">
+              {String(index + 3).padStart(2, '0')} / {character.role}
+            </p>
+            <h3 id={`character-${character.id}`}>{character.name}</h3>
+            <p class="character-allegiance">{character.allegiance}</p>
+            <p>{character.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
