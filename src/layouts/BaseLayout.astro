@@ -25,7 +25,23 @@ const socialImage = Astro.site
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fff5fa" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      (() => {
+        let t;
+        try {
+          t = localStorage.getItem('kudasai:theme');
+        } catch {
+          // The system preference also works when storage is unavailable.
+        }
+        document.documentElement.dataset.theme =
+          t === 'light' || t === 'dark'
+            ? t
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+      })();
+    </script>
     {noindex && <meta name="robots" content="noindex, follow" />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
@@ -61,6 +77,8 @@ const socialImage = Astro.site
     </site-motion>
     <script>
       import { SiteMotion } from '@/features/motion/motion.controller';
+      import { initializeTheme } from '@/features/theme/theme.controller';
+      initializeTheme();
       if (!customElements.get('site-motion')) customElements.define('site-motion', SiteMotion);
     </script>
   </body>

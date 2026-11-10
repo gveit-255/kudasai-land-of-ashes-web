@@ -1,10 +1,12 @@
 import { readFile, writeFile, readdir, mkdir, copyFile, unlink } from 'node:fs/promises';
 import { resolve, relative, dirname, extname, basename, sep } from 'node:path';
 import { createHash } from 'node:crypto';
+import vm from 'node:vm';
 
 const root = resolve(import.meta.dirname, '..');
 const sourceArgument = process.argv[2] || process.env.KUDASAI_GAME_SOURCE;
-if (!sourceArgument) throw new Error('Uso: npm run demo:export -- "ruta al proyecto RPG Maker MV"');
+if (!sourceArgument)
+  throw new Error('Uso: npm run demo:export -- "ruta a la exportación web cifrada"');
 const source = resolve(sourceArgument);
 const output = resolve(root, 'public/demo');
 if (source === root || source.startsWith(root + sep) || root.startsWith(source + sep)) {
@@ -23,15 +25,14 @@ async function walk(directory) {
   return groups.flat().sort();
 }
 const pluginText = await readFile(resolve(source, 'js/plugins.js'), 'utf8');
-const plugins = JSON.parse(
-  pluginText
-    .slice(pluginText.indexOf('=') + 1)
-    .trim()
-    .replace(/;$/, ''),
-);
+const pluginContext = {};
+vm.runInNewContext(pluginText, pluginContext, { timeout: 1000 });
+const plugins = pluginContext.$plugins;
+if (!Array.isArray(plugins)) throw new Error('Lista de plugins no válida.');
 const system = JSON.parse(await readFile(resolve(source, 'data/System.json'), 'utf8'));
-if (system.hasEncryptedImages || system.hasEncryptedAudio) {
-  throw new Error('Selecciona el proyecto editable sin cifrar, no una exportación Windows.');
+const key = createHash('md5').update('ClaveSecreta99', 'utf8').digest('hex');
+if (!system.hasEncryptedImages || !system.hasEncryptedAudio || system.encryptionKey !== key) {
+  throw new Error('Selecciona la exportación HTML5 cifrada con ClaveSecreta99, carpeta Navegador.');
 }
 const dataFiles = await walk(resolve(source, 'data'));
 const scriptFiles = await walk(resolve(source, 'js'));
@@ -71,7 +72,12 @@ const sourceFiles = [
 ].sort();
 // Snapshot every source resource before copying. Verify again after export.
 const fingerprints = new Map();
-for (const file of sourceFiles) fingerprints.set(file, sha256(await readFile(file)));
+for (const file of sourceFiles) {
+  const bytes = await readFile(file);
+  if (bytes.length > 25 * 1024 * 1024)
+    throw new Error('Archivo superior al límite de Pages: ' + relative(source, file));
+  fingerprints.set(file, sha256(bytes));
+}
 const manifestPath = resolve(output, 'manifest.json');
 let previous;
 try {
@@ -136,6 +142,9 @@ const manifest = {
   exportedAt: new Date().toISOString(),
   startMapId: system.startMapId,
   sourceUnchanged: true,
+  encryption: 'RPG Maker MV',
+  encryptedImages: entries.filter((entry) => entry.path.endsWith('.rpgmvp')).length,
+  encryptedAudio: entries.filter((entry) => /\.rpgmv[om]$/.test(entry.path)).length,
   bytes: entries.reduce((sum, entry) => sum + entry.bytes, 0),
   excludedHistoricalAssets: excluded,
   activePlugins: plugins.filter((plugin) => plugin.status).map((plugin) => plugin.name),

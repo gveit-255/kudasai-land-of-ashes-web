@@ -12,14 +12,14 @@ npm run validate
 
 Abrir `/jugar/`. En Cloudflare Pages: `npm run build`, directorio `dist`, Node según `.node-version`. Los assets de `public/demo` forman parte del proyecto: el build en Cloudflare **no necesita acceso al proyecto de RPG Maker ni a una ruta de Windows**. No subir `save/`, Game.exe, claves, carpetas de trabajo ni NW.js.
 
-## Actualizar desde el proyecto editable
+## Actualizar desde la versión web cifrada
 
 ```sh
-npm run demo:export -- "C:\ruta\al\proyecto RPG Maker MV"
+npm run demo:export -- "C:\ruta\a\Kudasai-Multiplataforma-20261110\Navegador"
 npm run validate
 ```
 
-También se puede definir `KUDASAI_GAME_SOURCE`. El exportador usa una lista de carpetas de recursos; no copia partidas, herramientas ni documentos. Conserva datos y plugins activos byte por byte, comprueba los hashes de las fuentes antes/después y genera `public/demo/manifest.json`. Solo sustituye archivos dentro de su destino fijo y retira archivos obsoletos enumerados en su manifiesto anterior. No modifica el proyecto editable ni ejecuta el despliegue Windows/cifrado.
+También se puede definir `KUDASAI_GAME_SOURCE`. La fuente debe ser la carpeta HTML5 `Navegador` cifrada con el formato nativo MV y `ClaveSecreta99`. El exportador verifica flags/clave y conserva los recursos cifrados; no vuelve a cifrarlos ni modifica las fuentes. Usa una lista de carpetas de recursos, sin copiar partidas, herramientas ni documentos. Conserva datos y plugins activos byte por byte, comprueba hashes antes/después y genera `public/demo/manifest.json`, con recuentos de imágenes/audio cifrados. Retira archivos obsoletos enumerados en el manifiesto anterior, incluidas las antiguas copias PNG/OGG/M4A sin cifrar. Los originales editables del juego permanecen intactos.
 
 Se excluyen fondos históricos de `parallaxes`, `titles1` y `titles2` sin referencia en los datos o código activo. Las familias de puertas y parque, cuyos nombres se componen dinámicamente, se incluyen completas. Las demás familias se conservan de forma preventiva. Al añadir una nueva familia dinámica, actualizar `dynamicFamilies` en `scripts/export-demo.mjs` y revisar en navegador todos los mapas afectados.
 
@@ -33,11 +33,15 @@ Se excluyen fondos históricos de `parallaxes`, `titles1` y `titles2` sin refere
 - La simulación se pausa al ocultar la pestaña y se reanuda al regresar.
 - Mensajes de arranque/error/salida con validación de origen y ventana del iframe.
 
-No hay backend, guardado en la nube, service worker ni descarga completa anticipada. Combate diseñado para teclado; no se afirma compatibilidad táctil completa. Cerrar el iframe libera el motor, sus animaciones y el audio.
+No hay backend, guardado en la nube, service worker ni descarga completa anticipada. La versión del 10/11/2026 incluye el plugin táctil de la exportación: cruceta de ocho direcciones, ataque/habilidad/dash/selector y Aceptar/Menú. Conserva Q/W/E/R, correr siempre, velocidad +10 %, dash de cuatro pasos con animación de Loussiana, movimiento diagonal por teclado y destino por clic/toque. Se conserva el prefijo de guardado anterior para que la actualización siga viendo las partidas del mismo dominio. Cerrar el iframe libera el motor, sus animaciones y el audio.
 
 ## Verificación
 
-`npm run validate` comprueba formato, ESLint, tipos Astro, build, presupuestos de JavaScript de la landing y reproductor por separado, referencias, manifiesto y hashes de la demo, ausencia de archivos de desarrollo/partidas, límite de 25 MiB por archivo y menos de 20.000 archivos. Verificar además en navegador: portada sin peticiones al motor, inicio de partida, prólogo, mapas, audio, menús, guardar/cargar, pantalla completa y volver a la web. Guardado ligado al dominio: usar un dominio estable para conservar partidas entre despliegues.
+`npm run validate` comprueba formato, ESLint, tipos Astro, build, presupuestos de JavaScript de la landing y reproductor por separado, referencias cifradas, cabeceras RPGMV, ausencia de duplicados sin cifrar, manifiesto/hashes, ausencia de archivos de desarrollo/partidas, límite de 25 MiB por archivo y menos de 20.000 archivos. `Window.png` y `Loading.png`, iconos y GIF conservan sus excepciones nativas. Verificar además en navegador: portada sin peticiones al motor, inicio de partida, prólogo, mapas, audio, menús, guardar/cargar, pantalla completa y volver a la web. Guardado ligado al dominio: usar un dominio estable para conservar partidas entre despliegues.
+
+## Modos claro y oscuro
+
+El selector de luna/sol está en la cabecera, el reproductor y la página 404. Sin preferencia explícita se sigue el tema del sistema; la selección se recuerda en `localStorage` bajo `kudasai:theme` y se sincroniza entre pestañas. Un pequeño script anterior al pintado aplica la preferencia para evitar destellos de tema claro. Si el almacenamiento no está disponible, el selector sigue funcionando durante la visita. El modo oscuro conserva Nunito, formas redondeadas, pétalos, imágenes y acentos rosa/lavanda; usa fondos ciruela y superficies suaves, sin alterar los colores del juego dentro del iframe.
 
 Referencias: [exportación web MV](https://rpgmakerofficial.com/product/MV_Help/page/01_11_04.html), [límites Pages](https://developers.cloudflare.com/pages/platform/limits/).
 

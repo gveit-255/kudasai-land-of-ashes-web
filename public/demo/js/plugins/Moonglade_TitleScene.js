@@ -1234,12 +1234,6 @@
       hint: "Acciones, pasos y sonidos de interfaz.",
     },
     {
-      key: "alwaysDash",
-      name: "Correr siempre",
-      hint: "Invierte el comportamiento de la tecla Mayús.",
-      toggle: true,
-    },
-    {
       key: "commandRemember",
       name: "Recordar comandos",
       hint: "Recuerda la última acción durante el combate.",

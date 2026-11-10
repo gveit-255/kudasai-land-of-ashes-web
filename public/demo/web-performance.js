@@ -1,5 +1,4 @@
 /* global Graphics, SceneManager, $gameMap */
-// Browser-only renderer and cadence. Gameplay retains MV's fixed 1/60 simulation step.
 (function () {
   'use strict';
   const frameMs = 1000 / 60;
@@ -10,8 +9,6 @@
   window.KudasaiWebPerformance = {
     install() {
       if (!baseline) {
-        // The desktop plugin defaults to a 1920x1080 framebuffer. Match the
-        // 1280x720 composition on the web; CSS still fits any viewport.
         Graphics._updateRenderer = function () {
           const renderer = this._renderer;
           if (!renderer) return;
@@ -30,8 +27,6 @@
           }
           this._centerElement(this._canvas);
         };
-        // Keep a single RAF pending across stop/resume and limit displays above
-        // 60 Hz without changing _deltaTime, movement, timers or combat updates.
         let pending = null;
         let deadline = null;
         const tick = (timestamp) => {
@@ -53,8 +48,6 @@
           if (pending !== null) cancelAnimationFrame(pending);
           pending = deadline = null;
         };
-        // The browser submits WebGL commands at the RAF boundary. Avoid the
-        // legacy explicit gl.flush and the associated 1-3 skipped draw frames.
         Graphics.render = function (stage) {
           if (stage) this._renderer.render(stage);
           this._rendered = !!stage;

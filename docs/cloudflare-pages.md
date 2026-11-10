@@ -39,17 +39,3 @@ Para probar el resultado con el servidor local de Pages:
 ```sh
 npm run pages:dev
 ```
-
-## Comprobaciones incluidas
-
-- Un único H1, metadatos, imágenes prioritarias/diferidas y enlaces internos válidos.
-- Los recursos referenciados existen y la galería conserva sus once imágenes.
-- La galería no incluye reproductor ni filtro de vídeos.
-- JavaScript por debajo de 10 KB sin comprimir en la portada y en el reproductor, medidos por separado. El motor MV solo se descarga después de pulsar Jugar.
-- Cada archivo por debajo de 25 MiB y menos de 20.000 archivos.
-- `404.html`, `_headers`, `robots.txt`, `sitemap.xml`, `/jugar/` y `/demo/` presentes.
-- Manifiesto y hashes de todos los recursos de la demo válidos, sin partidas ni archivos Windows.
-
-La demo se integra según [demo-web.md](demo-web.md). El paquete conserva los recursos necesarios como archivos estáticos; no se necesita un backend de juego ni un adaptador SSR. Las cabeceras de `/demo/*` permiten revalidar los recursos después de actualizar la demo.
-
-Las [cabeceras de Pages](https://developers.cloudflare.com/pages/configuration/headers/) dan caché inmutable a los recursos hash en `/_astro/` y caché semanal a los medios. Al reemplazar un medio que conserve nombre, cambiar su nombre o purgar la caché. Los [límites oficiales](https://developers.cloudflare.com/pages/platform/limits/) se comprueban en la salida de build, no en la carpeta de dependencias.

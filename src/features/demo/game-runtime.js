@@ -56,7 +56,7 @@
   sound.hidden = true;
   const style = document.createElement('style');
   style.textContent =
-    '.web-demo-sound{position:fixed;top:12px;right:12px;z-index:100;color:#f5f0e4;background:#101719e8;border:1px solid #ba9268;padding:10px 16px;font:14px Arial;cursor:pointer}.web-demo-sound[hidden]{display:none}';
+    '.web-demo-sound{position:fixed;top:12px;left:12px;z-index:110;color:#f5f0e4;background:#101719e8;border:1px solid #ba9268;border-radius:999px;padding:10px 16px;font:14px Arial;cursor:pointer}.web-demo-sound[hidden]{display:none}';
   document.head.appendChild(style);
   document.body.appendChild(sound);
   function unlockAudio() {

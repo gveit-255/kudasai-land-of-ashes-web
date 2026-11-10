@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DemoPlayer from '@/features/demo/DemoPlayer.astro';
+import ThemeToggle from '@/components/ui/ThemeToggle.astro';
 ---
 
 <BaseLayout
@@ -11,7 +12,10 @@ import DemoPlayer from '@/features/demo/DemoPlayer.astro';
     <div class="container">
       <header class="demo-header">
         <a href="/">← KUDASAI · LAND OF ASHES</a>
-        <span>DEMO EN DESARROLLO</span>
+        <div class="demo-header-actions">
+          <span>DEMO EN DESARROLLO</span>
+          <ThemeToggle />
+        </div>
       </header>
       <main class="demo-main" id="contenido">
         <div class="demo-intro">
@@ -28,18 +32,21 @@ import DemoPlayer from '@/features/demo/DemoPlayer.astro';
             <h2 id="controls-title">Antes de partir</h2>
             <dl>
               <dt>Flechas</dt>
-              <dd>Moverse</dd>
+              <dd>Moverse en ocho direcciones</dd>
+              <dt>Clic / toque</dt>
+              <dd>Caminar hacia el destino, también en diagonal</dd>
               <dt>Enter / Z</dt>
               <dd>Confirmar e interactuar</dd>
               <dt>Esc / X</dt>
               <dd>Menú y volver</dd>
-              <dt>Shift</dt>
-              <dd>Correr</dd>
-              <dt>J · K · L</dt>
-              <dd>Atacar · magia · esquivar</dd>
-              <dt>H · M</dt>
-              <dd>Curarse · elegir magia</dd>
+              <dt>Q · W · E</dt>
+              <dd>Ataque · habilidad · dash de cuatro cuadros</dd>
+              <dt>R</dt>
+              <dd>Elegir habilidad</dd>
+              <dt>Móvil</dt>
+              <dd>Cruceta y botones de combate en pantalla</dd>
             </dl>
+            <p>La carrera está siempre activada. No hay curación rápida.</p>
           </section>
           <section aria-labelledby="saves-title">
             <h2 id="saves-title">Guarda tu viaje</h2>
@@ -48,9 +55,9 @@ import DemoPlayer from '@/features/demo/DemoPlayer.astro';
               este navegador y dispositivo; no se sincronizan con Windows ni con otros equipos.
             </p>
             <p>
-              Si borras los datos del sitio o juegas en modo privado, puedes perderlas. Para
-              disfrutar del combate recomendamos ordenador, teclado y un navegador actualizado con
-              WebGL.
+              Si borras los datos del sitio o juegas en modo privado, puedes perderlas. Para jugar,
+              utiliza un navegador actualizado con WebGL. En móvil, gira la pantalla y usa los
+              controles táctiles o toca el mapa para moverte.
             </p>
             <p>
               ¿La imagen tarda en aparecer? Espera la primera carga y haz clic dentro del juego para

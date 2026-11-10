@@ -28,13 +28,40 @@ for (const entry of manifest.files) {
   assert((await stat(path)).size <= 25 * 1024 * 1024);
 }
 const system = JSON.parse(await readFile(resolve(demo, 'data/System.json'), 'utf8'));
-assert(!system.hasEncryptedImages && !system.hasEncryptedAudio);
+assert(system.hasEncryptedImages && system.hasEncryptedAudio);
+assert.equal(
+  system.encryptionKey,
+  createHash('md5').update('ClaveSecreta99', 'utf8').digest('hex'),
+);
+assert.equal(manifest.encryption, 'RPG Maker MV');
+assert.equal(
+  manifest.encryptedImages,
+  [...paths].filter((path) => path.endsWith('.rpgmvp')).length,
+);
+assert.equal(
+  manifest.encryptedAudio,
+  [...paths].filter((path) => /\.rpgmv[om]$/.test(path)).length,
+);
+assert(manifest.encryptedImages > 0 && manifest.encryptedAudio > 0);
+for (const path of paths) {
+  if (/\.rpgmv[pom]$/.test(path)) {
+    const bytes = await readFile(resolve(demo, path));
+    assert.equal(bytes.subarray(0, 16).toString('hex'), '5250474d560000000003010000000000', path);
+    const original = path
+      .replace(/\.rpgmvp$/, '.png')
+      .replace(/\.rpgmvo$/, '.ogg')
+      .replace(/\.rpgmvm$/, '.m4a');
+    assert(!paths.has(original), 'No plaintext duplicate: ' + path);
+  }
+}
 assert(paths.has(`data/Map${String(system.startMapId).padStart(3, '0')}.json`));
 for (const plugin of manifest.activePlugins) assert(paths.has(`js/plugins/${plugin}.js`));
 assert(paths.has('img/system/Window.png'));
 assert(paths.has('img/system/Loading.png'));
 assert(paths.has('fonts/mplus-1m-regular.ttf'));
-assert(paths.has(`img/titles1/${system.title1Name}.png`));
+assert(paths.has(`img/titles1/${system.title1Name}.rpgmvp`));
+assert(paths.has('img/characters/Kudasai_Loussiana_Dash_20261110.rpgmvp'));
+assert(manifest.activePlugins.includes('Kudasai_PlatformExport'));
 const imageFolders = {
   parallaxName: 'parallaxes',
   characterName: 'characters',
@@ -49,7 +76,8 @@ const imageFolders = {
 const checkedImages = new Set();
 function checkImage(folder, name) {
   if (!name) return;
-  const path = `img/${folder}/${name}.png`;
+  const extension = folder === 'system' && ['Window', 'Loading'].includes(name) ? 'png' : 'rpgmvp';
+  const path = `img/${folder}/${name}.${extension}`;
   // Match manifest strings exactly: Cloudflare paths are case sensitive.
   assert(paths.has(path), `Missing image reference: ${path}`);
   checkedImages.add(path);

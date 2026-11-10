@@ -1,6 +1,7 @@
 ---
 import '@/features/navigation/navigation.css';
 import { navigation } from '@/config/site';
+import ThemeToggle from '@/components/ui/ThemeToggle.astro';
 ---
 
 <site-navigation>
@@ -12,11 +13,9 @@ import { navigation } from '@/config/site';
       {navigation.map((item) => (
         <a href={item.href}>{item.label}</a>
       ))}
-      <a href="#estado" class="nav-status">
-        <span class="status-dot" aria-hidden="true"></span> En desarrollo
-      </a>
     </nav>
     <div class="header-end">
+      <ThemeToggle />
       <button
         hidden
         class="motion-toggle"

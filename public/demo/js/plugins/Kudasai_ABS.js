@@ -1,5 +1,5 @@
 /*:
- * @plugindesc v1.2 ABS: retroceso, magia seleccionable y mazmorras. MV 1.6.
+ * @plugindesc v1.4.1 ABS: Q/W/E/R, dash de cuatro casillas y animación propia de Loussiana. MV 1.6.
  * @author Gstv_
  * @requiredAssets img/characters/Kudasai_Loussiana_Katana
  * @requiredAssets img/characters/Kudasai_Enemigos_Ataques
@@ -16,10 +16,6 @@
  * @text Habilidad de magia
  * @type skill
  * @default 10
- * @param HealSkill
- * @text Habilidad de curación
- * @type skill
- * @default 8
  * @param DemoMap
  * @type number
  * @default 32
@@ -46,9 +42,9 @@
  * Crear una página vacía condicionada al interruptor local elegido.
  * El gráfico del enemigo es el gráfico normal del evento.
  *
- * Flechas: mover. J: atacar. M o botón «Elegir magia»: equipar. K: lanzar.
- * L: esquivar. H: curar. Mando: Select/Back abre el selector.
- * Mando: X atacar, Y magia, L1 esquivar, R1 curar (botones 2/3/4/5).
+ * Flechas: mover (incluidas diagonales). Q: atacar. W: lanzar habilidad.
+ * E: dash. R o botón «Elegir habilidad»: equipar. Sin curación rápida.
+ * Mando: X atacar, Y magia, L1 dash y Select/Back selector (2/3/4/8).
  * No modifica los atajos originales fuera de mapas ABS.
  * Pausa durante mensajes, eventos, menú, transferencias y cinemáticas.
  * No hay encuentros aleatorios en mapas ABS. Combates de evento normales
@@ -90,7 +86,7 @@
     'use strict';
     var params = PluginManager.parameters('Kudasai_ABS');
     var magicId = Number(params.MagicSkill || 10);
-    var healId = Number(params.HealSkill || 8);
+    var dashTiles = 4;
     var demoMap = Number(params.DemoMap || 32);
     var caveMap = Number(params.CaveMap || 33);
     var tempo = Math.max(25,Math.min(200,Number(params.EnemyTempo)||50))/100;
@@ -110,15 +106,32 @@
         {hit:7, duration:22, range:1.55},
         {hit:10, duration:28, range:1.9}
     ];
-    var keys = {74:'kabsAttack',75:'kabsMagic',76:'kabsDodge',72:'kabsHeal',77:'kabsSelect'};
-    Object.keys(keys).forEach(function(k) { if (!Input.keyMapper[k]) Input.keyMapper[k] = keys[k]; });
+    var keys = {81:'kabsAttack',87:'kabsMagic',69:'kabsDodge',82:'kabsSelect'};
+    // Q/W are native menu page keys. Remap only the combat key-down event;
+    // leave MV's global mapper intact, including gamepad and menu navigation.
+    var keyDown=Input._onKeyDown;
+    Input._onKeyDown=function(event){
+        var symbol=keys[event.keyCode],previous=this.keyMapper[event.keyCode];
+        if(symbol&&$gameSystem&&running()){
+            this.keyMapper[event.keyCode]=symbol;
+            try{keyDown.apply(this,arguments);}finally{
+                if(previous===undefined)delete this.keyMapper[event.keyCode];else this.keyMapper[event.keyCode]=previous;
+            }
+        }else keyDown.apply(this,arguments);
+    };
+    var keyUp=Input._onKeyUp;
+    Input._onKeyUp=function(event){
+        keyUp.apply(this,arguments);
+        // A menu or selector may have opened while a combat key was held.
+        if(keys[event.keyCode])this._currentState[keys[event.keyCode]]=false;
+    };
     if (!Input.keyMapper[117]) Input.keyMapper[117] = 'kabsDemo';
     if (!Input.keyMapper[118]) Input.keyMapper[118] = 'kabsCave';
 
     function tagged() { return !!($dataMap && /<KudasaiABS>/i.test($dataMap.note || '')); }
     function enabled() { return tagged() && $gameSystem._kabsEnabled !== false; }
     function state() {
-        if (!$gameSystem._kabs) $gameSystem._kabs = {stamina:100, attack:0, magic:0, heal:0, dodge:0, invuln:0, steps:0, turn:0, dead:{}};
+        if (!$gameSystem._kabs) $gameSystem._kabs = {stamina:100, attack:0, magic:0, dodge:0, invuln:0, steps:0, turn:0, dead:{}};
         if (!$gameSystem._kabs.magicByActor) $gameSystem._kabs.magicByActor={};
         return $gameSystem._kabs;
     }
@@ -247,7 +260,10 @@
     var locateCharacter=Game_CharacterBase.prototype.locate;
     Game_CharacterBase.prototype.locate=function(){
         this._kabsPush=null;
-        if(this===$gamePlayer){this._kabsSwing=null;this._kabsChain=null;this._kabsRoll=null;}
+        if(this===$gamePlayer){
+            this._kabsSwing=null;this._kabsChain=null;this._kabsRoll=null;this._kabsDash=null;
+            if($gameSystem&&$gameSystem._kabs)$gameSystem._kabs.steps=0;
+        }
         locateCharacter.apply(this,arguments);
     };
     function apply(action,target,character,source,customImpact) {
@@ -347,7 +363,7 @@
         popups=[];slashes=[];eruptions=[];
         mapSetup.apply(this,arguments);
         var s=state();s.steps=0;s.dodge=0;s.invuln=0;
-        $gamePlayer._kabsPush=null;$gamePlayer._kabsSwing=null;$gamePlayer._kabsChain=null;$gamePlayer._kabsRoll=null;
+        $gamePlayer._kabsPush=null;$gamePlayer._kabsSwing=null;$gamePlayer._kabsChain=null;$gamePlayer._kabsRoll=null;$gamePlayer._kabsDash=null;
     };
     var encounter=Game_Player.prototype.executeEncounter;
     Game_Player.prototype.executeEncounter=function(){return enabled()?false:encounter.apply(this,arguments);};
@@ -355,12 +371,16 @@
     Game_Actor.prototype.turnEndOnMap=function(){if(enabled()&&this===actor())return;walkTurn.apply(this,arguments);};
     var moveInput=Game_Player.prototype.moveByInput;
     Game_Player.prototype.moveByInput=function(){
-        if(enabled() && (!actor() || !actor().canMove() || state().steps>0 || this._kabsPush ||
+        if(enabled() && (!actor() || !actor().canMove() || state().steps>0 || this._kabsDash || this._kabsPush ||
             this._kabsSwing || this._kabsRoll || Input.isTriggered('kabsDodge') || selectingMagic()))return;
         moveInput.apply(this,arguments);
     };
     var realSpeed=Game_Player.prototype.realMoveSpeed;
-    Game_Player.prototype.realMoveSpeed=function(){return enabled()&&state().dodge>0?6:realSpeed.apply(this,arguments);};
+    Game_Player.prototype.realMoveSpeed=function(){
+        // The cooldown is not movement. Holding an arrow after the dash
+        // steps must immediately return to ordinary running speed.
+        return enabled()&&(this._kabsDash&&this._kabsDash.moving||state().steps>0)?6:realSpeed.apply(this,arguments);
+    };
 
     function enemyFamily(event) {
         if(event.characterName()===basaltSheet||event.characterName()===mikuSheet)return 3;
@@ -553,13 +573,15 @@
         }
     }
     function dodge(d) {
-        var s=state();
-        if(s.dodge>0||s.stamina<30||!actor().canMove()||$gamePlayer._kabsPush||$gamePlayer.isMoving()||!$gamePlayer.canPass($gamePlayer.x,$gamePlayer.y,d))return;
+        var s=state(),p=$gamePlayer,diagonal=d%2===1,h=d===1||d===7?4:6,v=d===1||d===3?2:8;
+        var pass=diagonal?p.canPassDiagonally(p.x,p.y,h,v):p.canPass(p.x,p.y,d);
+        if(s.dodge>0||s.stamina<30||!actor().canMove()||p._kabsPush||p.isMoving()||!pass)return;
         var swing=$gamePlayer._kabsSwing;
         if(swing&&swing.age<katanaCuts[swing.cut].hit+4)return;
         $gamePlayer._kabsSwing=null;
-        $gameTemp.clearDestination();$gamePlayer.setDirection(d);
-        s.stamina-=30;s.dodge=24;s.invuln=Math.max(s.invuln,24);s.steps=2;s.dodgeDir=d;
+        $gameTemp.clearDestination();$gamePlayer.setDirection(diagonal?v:d);
+        s.stamina-=30;s.dodge=24;s.invuln=Math.max(s.invuln,24);s.steps=dashTiles;s.dodgeDir=d;
+        p._kabsDash={direction:d,age:0,moving:true,landing:0,stepsTaken:0};
         return true;
     }
     var basaltPatterns = {
@@ -696,24 +718,38 @@
         if(pressed('kabsSelect',8,false)){SceneManager._scene.openKudasaiMagic();return;}
         var s=state();
         if(actor().isDead()){SceneManager.goto(Scene_Gameover);return;}
-        ['attack','magic','heal','dodge','invuln'].forEach(function(k){s[k]=Math.max(0,s[k]-1);});
+        ['attack','magic','dodge','invuln'].forEach(function(k){s[k]=Math.max(0,s[k]-1);});
         updateKatana();
         s.stamina=Math.min(100,s.stamina+0.35);
         if(!s.dodge)s.steps=0;
-        if(s.steps>0&&!$gamePlayer.isMoving()){$gamePlayer.moveStraight(s.dodgeDir);s.steps--;if(!$gamePlayer.isMovementSucceeded())s.steps=0;}
-        var attack=pressed('kabsAttack',2,true),magic=pressed('kabsMagic',3,false),roll=pressed('kabsDodge',4,false),heal=pressed('kabsHeal',5,false);
+        var dash=$gamePlayer._kabsDash;
+        // Continue an older save's pending dash without changing its progress.
+        if(!dash&&s.steps>0){s.steps=Math.min(dashTiles,s.steps);dash=$gamePlayer._kabsDash={direction:s.dodgeDir,age:2,moving:true,landing:0,stepsTaken:0};}
+        if(dash){
+            dash.age++;
+            if(dash.moving&&!s.steps&&!$gamePlayer.isMoving()){dash.moving=false;dash.landing=3;}
+            else if(!dash.moving&&--dash.landing<=0)$gamePlayer._kabsDash=null;
+        }
+        if(s.steps>0&&(!dash||dash.age>=2)&&!$gamePlayer.isMoving()){
+            var d=s.dodgeDir;
+            if(d%2===1)$gamePlayer.moveDiagonally(d===1||d===7?4:6,d===1||d===3?2:8);else $gamePlayer.moveStraight(d);
+            s.steps--;
+            if(!$gamePlayer.isMovementSucceeded()){s.steps=0;if(dash){dash.moving=false;dash.landing=3;}}
+            else if(dash)dash.stepsTaken++;
+        }
+        var attack=pressed('kabsAttack',2,true),magic=pressed('kabsMagic',3,false),roll=pressed('kabsDodge',4,false);
         var player=$gamePlayer;
-        if(roll&&!s.dodge&&s.stamina>=30&&!player._kabsPush){
-            player._kabsRoll={direction:Input.dir4||player.direction(),frames:16};
+        if(roll&&!s.dodge&&s.stamina>=30&&!player._kabsPush&&!player._kabsDash){
+            var remaining=Math.max(Math.abs(player.x-player._realX),Math.abs(player.y-player._realY));
+            player._kabsRoll={direction:Input.dir8||player.direction(),frames:Math.max(16,Math.ceil(remaining/player.distancePerFrame())+2)};
         }
         var request=player._kabsRoll;
         if(request&&(dodge(request.direction)||(!player.isMoving()&&!player._kabsSwing)||--request.frames<=0))player._kabsRoll=null;
-        if(attack&&!player._kabsRoll){
+        if(attack&&!player._kabsRoll&&!player._kabsDash){
             if(usesKatana())startKatana();
             else usePlayer(actor().attackSkillId(),'attack',1.55,26,true);
         }
-        if(magic)usePlayer(selectedMagic(),'magic',6,75,false);
-        if(heal)usePlayer(healId,'heal',0,180,false);
+        if(magic&&!player._kabsDash)usePlayer(selectedMagic(),'magic',6,75,false);
         if(caveEnding())return;
         enemies().forEach(updateEnemy);
         s.turn++;
@@ -813,7 +849,7 @@
     };
     MagicWindow.prototype.updateHelp=function(){
         var skill=$dataSkills[this.currentExt()];
-        if(this._helpWindow)this._helpWindow.setText('MAGIA DE ATAQUE  |  Enter: equipar  |  K: lanzar\n'+(skill?(skill.description||skill.name+' - alcance frontal de 6 casillas.'):'Aprende una habilidad ofensiva para equiparla aquí.'));
+        if(this._helpWindow)this._helpWindow.setText('MAGIA DE ATAQUE  |  Enter: equipar  |  W: lanzar\n'+(skill?(skill.description||skill.name+' - alcance frontal de 6 casillas.'):'Aprende una habilidad ofensiva para equiparla aquí.'));
     };
     Scene_Map.prototype.openKudasaiMagic=function(){
         if(!running()||!actor())return;
@@ -1228,7 +1264,7 @@
         popups.forEach(function(p){var xy=screen(p);b.paintOpacity=Math.min(255,p.life*12);text(p.text,xy.x-110,xy.y-65-(60-p.life)*0.55,220,19,p.color,'center');});b.paintOpacity=255;
         var chosen=selectedMagic(),chosenSkill=$dataSkills[chosen];
         var katana=usesKatana(),swing=$gamePlayer._kabsSwing;
-        var boxes=[['J',katana?'Katana':'Ataque',s.attack,26,a.attackSkillId()],['K',chosenSkill?chosenSkill.name:'Magia',s.magic,75,chosen],['L','Esquiva',s.dodge,24,0],['H','Curar',s.heal,180,healId]],total=408,start=(w-total)/2;
+        var boxes=[['Q',katana?'Katana':'Ataque',s.attack,26,a.attackSkillId()],['W',chosenSkill?chosenSkill.name:'Magia',s.magic,75,chosen],['E','Dash',s.dodge,24,0]],total=304,start=(w-total)/2;
         boxes.forEach(function(item,i){
             var x=start+i*104,y=h-66,status='',color='#b6c6bd',skill=$dataSkills[item[4]];
             if(i===0&&katana&&swing)status='Corte '+(swing.cut+1)+'/3';
@@ -1245,7 +1281,7 @@
         var magic=magicButton();
         b.fillRect(magic.x,magic.y,magic.width,magic.height,'rgba(18,13,34,0.88)');
         b.fillRect(magic.x,magic.y,magic.width,1,'#9071bb');
-        text('M · Elegir magia',magic.x,magic.y,magic.width,14,'#eadcfc','center');
+        text('R · Elegir habilidad',magic.x,magic.y,magic.width,14,'#eadcfc','center');
         if($gameMap.mapId()===demoMap)text('ARENA ABS · Entrenamiento',12,h-34,270,15,'#d4c49e');
     };
     var display=Scene_Map.prototype.createDisplayObjects;
@@ -1287,5 +1323,5 @@
             $gamePlayer.setTransparent(false);$gamePlayer.reserveTransfer(caveMap,22,31,8,0);SceneManager.goto(Scene_Map);
         }
     };
-    window.KudasaiABS={version:'1.2.0',isEnabled:enabled,isRunning:running,enterDemo:enterDemo,returnDemo:returnDemo,enterCave:enterCave,returnCave:returnCave,enter:enterDungeon,rememberOrigin:rememberOrigin,returnToOrigin:returnToOrigin,hasReturn:hasReturnPoint,offensiveSkills:offensiveSkills,selectedMagic:selectedMagic,selectMagic:selectMagic,reset:resetEnemies};
+    window.KudasaiABS={version:'1.4.1',dashTiles:dashTiles,isEnabled:enabled,isRunning:running,enterDemo:enterDemo,returnDemo:returnDemo,enterCave:enterCave,returnCave:returnCave,enter:enterDungeon,rememberOrigin:rememberOrigin,returnToOrigin:returnToOrigin,hasReturn:hasReturnPoint,offensiveSkills:offensiveSkills,selectedMagic:selectedMagic,selectMagic:selectMagic,reset:resetEnemies};
 })();

@@ -1,0 +1,175 @@
+---
+import JapaneseLabel from '@/components/ui/JapaneseLabel.astro';
+import SakuraMark from '@/components/ui/SakuraMark.astro';
+import { downloadLinks } from '@/config/downloads';
+import './downloads.css';
+
+const versions = [
+  {
+    key: 'pc',
+    title: 'PC · Windows',
+    detail: 'Tu aventura, en pantalla grande.',
+    format: 'ZIP · Descomprime y abre Game.exe',
+    url: downloadLinks.pc,
+  },
+  {
+    key: 'android',
+    title: 'Android',
+    detail: 'Lleva Kudasai siempre contigo.',
+    format: 'APK · Android 8.0 o posterior',
+    url: downloadLinks.android,
+  },
+];
+for (const version of versions) {
+  if (version.url && new URL(version.url).protocol !== 'https:') {
+    throw new Error('Los enlaces de descarga deben usar HTTPS.');
+  }
+}
+---
+
+<section class="downloads section" id="descargar" aria-labelledby="downloads-title">
+  <div class="section-number" aria-hidden="true">
+    05 <span>DESCARGAR</span>
+  </div>
+  <div class="container downloads-content" data-reveal>
+    <div class="downloads-copy">
+      <JapaneseLabel text="ダウンロード" />
+      <p class="eyebrow">UN NUEVO VIAJE TE ESPERA</p>
+      <h2 id="downloads-title">
+        Descarga <em>del juego.</em>
+      </h2>
+      <p>
+        Elige tu versión, es completamente gratis.
+      </p>
+    </div>
+    <div class="downloads-invite">
+      <SakuraMark />
+      <p>¿Dónde empieza tu aventura?</p>
+      <button
+        type="button"
+        class="button button-primary"
+        data-download-open
+        aria-haspopup="dialog"
+        aria-controls="download-dialog"
+        hidden
+      >
+        Descargar juego <span aria-hidden="true">↓</span>
+      </button>
+      <noscript>
+        <p>Las descargas se abren en OneDrive.</p>
+        {versions.map((version) =>
+          version.url ? (
+            <p>
+              <a href={version.url} target="_blank" rel="noopener noreferrer">
+                {version.title} ↗
+              </a>
+            </p>
+          ) : (
+            <p>{version.title} · Próximamente</p>
+          ),
+        )}
+      </noscript>
+      <span>PC Windows · Android</span>
+    </div>
+  </div>
+  <dialog
+    id="download-dialog"
+    class="download-modal"
+    aria-labelledby="download-dialog-title"
+    aria-describedby="download-dialog-note"
+  >
+    <div class="download-modal-top">
+      <span class="download-kicker">
+        <SakuraMark /> ELIGE TU AVENTURA
+      </span>
+      <button
+        type="button"
+        class="download-close"
+        data-download-close
+        aria-label="Cerrar descargas"
+      >
+        Cerrar ×
+      </button>
+    </div>
+    <h2 id="download-dialog-title">
+      Kudasai, <em>contigo.</em>
+    </h2>
+    <p id="download-dialog-note">
+      Al pulsar una descarga se abrirá un enlace de OneDrive, donde encontrarás la
+      copia del juego para descargar.
+    </p>
+    <div class="download-versions" id="versiones-del-juego">
+      {versions.map((version) => (
+        <article class="download-version">
+          <svg
+            class="download-platform"
+            width="42"
+            height="42"
+            viewBox="0 0 48 48"
+            fill="none"
+            aria-hidden="true"
+          >
+            {version.key === 'pc' ? (
+              <>
+                <rect x="5" y="8" width="38" height="26" rx="5" />
+                <path d="M17 41h14M24 34v7" />
+                <path d="m21 19 3 3 3-3" />
+              </>
+            ) : (
+              <>
+                <rect x="13" y="4" width="22" height="40" rx="6" />
+                <path d="M20 10h8M22 37h4" />
+                <path d="m20 23 4 4 4-4M24 18v9" />
+              </>
+            )}
+          </svg>
+          <h3>{version.title}</h3>
+          
+          <span class="download-format">{version.format}</span>
+          {version.url ? (
+            <a
+              class="button button-primary"
+              href={version.url}
+              rel="noopener noreferrer"
+              data-download-platform={version.key}
+            >
+              Ir a OneDrive <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <button
+              type="button"
+              class="button download-pending"
+              disabled
+              data-download-platform={version.key}
+            >
+              Próximamente
+            </button>
+          )}
+        </article>
+      ))}
+    </div>
+    
+  </dialog>
+</section>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.download-modal');
+  const trigger = document.querySelector<HTMLButtonElement>('[data-download-open]');
+  if (dialog && trigger) {
+    trigger.hidden = false;
+    trigger.addEventListener('click', () => dialog.showModal());
+    dialog.querySelector('[data-download-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => {
+      const rect = dialog.getBoundingClientRect();
+      if (
+        event.target === dialog &&
+        (event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom)
+      )
+        dialog.close();
+    });
+    dialog.addEventListener('close', () => trigger.focus({ preventScroll: true }));
+  }
+</script>

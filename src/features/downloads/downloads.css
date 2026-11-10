@@ -1,0 +1,187 @@
+@layer components {
+  .downloads {
+    background: var(--ink);
+    border-block: 1px solid var(--line);
+  }
+  .downloads-content {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: 70px;
+  }
+  .downloads-copy > p:last-child {
+    max-width: 460px;
+    margin-top: 24px;
+    color: var(--muted);
+  }
+  .downloads-invite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 42px 26px;
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    background: var(--surface);
+    box-shadow: var(--card-shadow);
+    text-align: center;
+  }
+  .downloads-invite > .sakura-mark {
+    width: 38px;
+    height: 38px;
+    color: var(--accent);
+  }
+  .downloads-invite > p {
+    color: var(--paper);
+    font-size: 21px;
+    font-weight: 800;
+  }
+  .downloads-invite > span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .download-modal {
+    margin: auto;
+    width: min(720px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: var(--surface);
+    color: var(--paper);
+    box-shadow: 0 24px 90px #130d2859;
+    overflow: auto;
+  }
+  .download-modal::backdrop {
+    background: #20132bd1;
+    backdrop-filter: blur(6px);
+  }
+  .download-modal-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .download-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  .download-close {
+    min-height: 44px;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--accent);
+    font: 800 12px var(--sans);
+    cursor: pointer;
+  }
+  .download-modal h2 {
+    font-size: clamp(28px, 5vw, 38px);
+  }
+  #download-dialog-note {
+    margin: 16px 0 26px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .download-versions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .download-version {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 26px 18px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--ink);
+    text-align: center;
+  }
+  .download-platform {
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 4px;
+  }
+  .download-version h3 {
+    font-size: 22px;
+  }
+  .download-version > p,
+  .download-format {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .download-format {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  .download-version .button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: auto;
+  }
+  .download-pending,
+  .download-pending:hover {
+    color: var(--muted);
+    background: var(--surface-soft);
+    border: 1px dashed var(--line);
+    box-shadow: none;
+    transform: none;
+    cursor: default;
+  }
+
+  html:has(.download-modal[open]) {
+    overflow: hidden;
+  }
+}
+@layer responsive {
+  @media (max-width: 800px) {
+    .downloads-content {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 540px) {
+    .download-modal {
+      padding: 22px 18px;
+      border-radius: 24px;
+    }
+    .download-versions {
+      grid-template-columns: 1fr;
+    }
+    .download-version {
+      padding: 24px 18px;
+    }
+    .download-kicker {
+      letter-spacing: 0.06em;
+      font-size: 9px;
+    }
+  }
+}
+@media print {
+  .download-modal {
+    display: block;
+    position: static;
+    max-height: none;
+  }
+}
+@layer theme {
+  .download-modal .download-pending,
+  .download-modal .download-pending:hover {
+    color: var(--muted);
+    background: var(--surface-soft);
+    border: 1px dashed var(--line);
+    box-shadow: none;
+    transform: none;
+  }
+}

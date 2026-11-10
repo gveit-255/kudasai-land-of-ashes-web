@@ -10,5 +10,5 @@ export const navigation = [
   { href: '#mundo', label: 'El mundo' },
   { href: '#personajes', label: 'Personajes' },
   { href: '#galeria', label: 'Galería' },
-  { href: '/jugar/', label: 'Jugar demo' },
+  { href: '#descargar', label: 'Descargar' },
 ];

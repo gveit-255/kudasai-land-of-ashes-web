@@ -1,5 +1,5 @@
 /*:
- * @plugindesc Gruta de los Ecos: galerías naturales y autotiles de agua originales de MV. v2.2
+ * @plugindesc Gruta de los Ecos: agua MV, fuego azul sin núcleo blanco y soporte fijo. v2.5
  * @author Gstv_
  * @requiredAssets img/parallaxes/Kudasai_Cueva_Natural_20261107
  * @requiredAssets img/parallaxes/Kudasai_Cueva_Caliza_20261107
@@ -15,7 +15,7 @@
  */
 (function () {
     'use strict';
-    var VERSION = '20261107.5', HASH = 1703219526;
+    var VERSION = '20261110.3', HASH = 1703219526;
     function eligible() {
         return $gameMap && $gameMap.mapId() === 33 && $dataMap &&
             $dataMap.width === 64 && $dataMap.height === 54 &&
@@ -155,7 +155,6 @@
             c.beginPath();c.moveTo(6,26);c.bezierCurveTo(2,18,11,16,10+sway,4);
             c.bezierCurveTo(19,12,15,13,19,18);c.bezierCurveTo(23,25,17,28,12,28);c.closePath();
             var g=c.createLinearGradient(0,4,0,28);g.addColorStop(0,'#2d81b9');g.addColorStop(.7,'#6bd8ed');g.addColorStop(1,'#9ce2ef');c.fillStyle=g;c.fill();
-            c.beginPath();c.moveTo(9,26);c.quadraticCurveTo(7,20,13-sway*.5,14);c.quadraticCurveTo(18,24,14,27);c.closePath();c.fillStyle='#d8f7f5';c.fill();
             c.fillStyle='rgba(131,220,244,.6)';c.fillRect(10+(i*3)%6,2+(i*5)%8,1,1);c.restore();
         }
         b._setDirty();fx.flameBitmap=b;
@@ -171,8 +170,9 @@
         if(!fx||fx.disposed||this._character.characterName()!=='!$Kudasai_Antorcha')return;
         var frame=this._frame,cut=25,height=frame.height-cut;
         if(height<=0)return;
-        // Crop only the old fire; the dish, stem and metal base keep their pixels.
-        this.setFrame(frame.x,frame.y+cut,frame.width,height);
+        // The native sheet changes the support between animation columns.
+        // Keep its authored middle pose; animate only the separate blue flame.
+        this.setFrame((this.characterBlockX()+1)*frame.width,frame.y+cut,frame.width,height);
         if(!this._caveBlueFlame){
             var sp=new Sprite(fx.flameBitmap);sp.anchor.set(.5,1);this.addChild(sp);
             fx.sprites.push(sp);this._caveBlueFlame=sp;
