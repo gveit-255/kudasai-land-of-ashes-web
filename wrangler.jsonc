@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "kudasai-land-of-ashes",
-  "pages_build_output_dir": "./dist",
+  // Solo desarrollo local: las variables de producción se gestionan en el panel de Pages.
+  "name": "kudasai-land-of-ashes-web",
   "compatibility_date": "2026-11-08",
 }
