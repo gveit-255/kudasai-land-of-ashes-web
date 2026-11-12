@@ -479,7 +479,9 @@
         var cut=katanaCuts[swing.cut],age=swing.age;
         var frame=age<3?0:age<cut.hit?1:age<cut.hit+5?2:3;
         var row=swing.direction===2?0:swing.direction===8?2:1;
-        blade.scale.x=swing.direction===4?-1:1;
+        // The katana atlas is already drawn at map scale.
+        var scale=1/(this._kudasaiTextureScale||1);
+        blade.scale.set(swing.direction===4?-scale:scale,scale);
         blade.setFrame(frame*104,row*72,104,72);
         blade.visible=true;
         hideCharacterFrame(this);

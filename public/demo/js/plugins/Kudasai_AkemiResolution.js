@@ -1,25 +1,28 @@
 /*:
- * @plugindesc Conserva la hoja original de Akemi sin reducir sus pixeles.
+ * @plugindesc Conserva las hojas originales de Akemi y Loussiana sin reducir sus pixeles.
  * @author Kudasai
  * @help
- * Solo $Kudasai_Akemi con celdas mayores de 64 px: textura original,
+ * Para $Kudasai_Akemi y $Kudasai_Loussiana con celdas mayores de 64 px: textura original,
  * escala de visualizacion equivalente a una celda de 64 px, filtrado lineal.
  * Compatible con menus, arbustos, sombras de Alba y MV3D. Cargar al final.
  */
 (function () {
     'use strict';
-    var name = '$Kudasai_Akemi';
+    var names = ['$Kudasai_Akemi', '$Kudasai_Loussiana'];
+    var cellSize = 64;
+    var displayWidth = cellSize * 3;
     function factor(bitmap, characterName) {
-        return characterName === name && bitmap && bitmap.isReady() && bitmap.width > 192 ? 192 / bitmap.width : 1;
+        return names.indexOf(characterName) >= 0 && bitmap && bitmap.isReady() &&
+            bitmap.width > displayWidth ? displayWidth / bitmap.width : 1;
     }
     window.KudasaiAkemiResolution = {
         factor: factor,
         shadowSource: function (bitmap, characterName) {
             if (factor(bitmap, characterName) === 1) return bitmap._canvas;
             if (!bitmap._akemiShadowCanvas) {
-                var canvas = document.createElement('canvas');canvas.width = 192;canvas.height = 256;
+                var canvas = document.createElement('canvas');canvas.width = displayWidth;canvas.height = cellSize * 4;
                 var context = canvas.getContext('2d');context.imageSmoothingEnabled = true;
-                context.drawImage(bitmap._canvas, 0, 0, 192, 256);bitmap._akemiShadowCanvas = canvas;
+                context.drawImage(bitmap._canvas, 0, 0, canvas.width, canvas.height);bitmap._akemiShadowCanvas = canvas;
             }
             return bitmap._akemiShadowCanvas;
         }
@@ -29,9 +32,12 @@
         updateBitmap.apply(this, arguments);
         var scale = factor(this.bitmap, this._characterName);
         if (scale !== 1) {
-            this.bitmap.smooth = true;this.scale.set(scale, scale);this._akemiOriginalScale = scale;
-        } else if (this._akemiOriginalScale) {
-            this.scale.set(1, 1);this._akemiOriginalScale = null;
+            this.bitmap.smooth = true;
+            this.scale.set(scale, scale);
+            this._kudasaiTextureScale = scale;
+        } else if (this._kudasaiTextureScale) {
+            this.scale.set(1, 1);
+            this._kudasaiTextureScale = null;
         }
     };
     var updateCharacterFrame = Sprite_Character.prototype.updateCharacterFrame;
@@ -47,7 +53,8 @@
         if (scale === 1) return drawCharacter.apply(this, arguments);
         var width = bitmap.width / 3, height = bitmap.height / 4, context = this.contents._context;
         context.save();context.imageSmoothingEnabled = true;
-        context.drawImage(bitmap._canvas, width, 0, width, height, x - 32, y - 64, 64, 64);
+        context.drawImage(bitmap._canvas, width, 0, width, height,
+            x - cellSize / 2, y - height * scale, cellSize, height * scale);
         context.restore();this.contents._setDirty();
     };
     if (window.mv3d && mv3d.Character) {

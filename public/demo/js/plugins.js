@@ -30,14 +30,14 @@ var $plugins =
 {"name":"Kudasai_PlayerMovement","status":true,"description":"v20261110.2 Correr siempre, movimiento +10% y diagonales por teclado/ratón.","parameters":{}},
 {"name":"Kudasai_PlayerAppearance","status":true,"description":"Loussiana controlable en partidas nuevas y guardadas; conserva apariencias personalizadas.","parameters":{}},
 {"name":"Kudasai_MV3D","status":true,"description":"v2 Prólogo del claro: cámara fija, árboles y hojas pequeñas con brisa.","parameters":{}},
-{"name":"Kudasai_AkemiResolution","status":true,"description":"Akemi con textura original sin reduccion de pixeles; escala de visualizacion para mapas y menus.","parameters":{}},
+{"name":"Kudasai_AkemiResolution","status":true,"description":"Akemi y Loussiana con textura original sin reduccion de pixeles; escala de visualizacion para mapas y menus.","parameters":{}},
 {"name":"Kudasai_Casas_Guia","status":true,"description":"Casas pastel según guía: Consejo, Revuelta, Ishimura y variantes de Alba.","parameters":{}},
 {"name":"Kudasai_WindowParallax","status":true,"description":"Ventanas con luz por horario, reflejos y profundidad parallax ajustada al cristal.","parameters":{}},
 {"name":"Kudasai_Market","status":true,"description":"Mercado artesanal de Alba: puestos, sombras y colisiones de la plaza.","parameters":{}},
 {"name":"Kudasai_Park","status":true,"description":"Parque de Alba: fuente, bancos y jardines florales.","parameters":{}},
 {"name":"Kudasai_HousePlanters","status":true,"description":"Jardineras florales según referencia del usuario.","parameters":{}},
 {"name":"Kudasai_Interiors","status":true,"description":"v20261108.9 Interiores reformados y vecinos de Alba en sus casas.","parameters":{}},
-{"name":"Kudasai_DashSprites","status":true,"description":"v20261110.1 Animación de dash de Loussiana y estela breve.","parameters":{}}
+{"name":"Kudasai_DashSprites","status":true,"description":"v20261110.1 Animación original de dash de Loussiana y estela breve.","parameters":{}}
 ];
 
 $plugins.push({name:'Kudasai_PlatformExport',status:true,description:'Controles web y movil',parameters:{}});

@@ -1,0 +1,2 @@
+# El manifiesto de la demo verifica los hashes de los archivos exportados.
+/public/demo/** -text

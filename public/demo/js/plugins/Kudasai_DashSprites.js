@@ -44,6 +44,8 @@
         var bitmap=ImageManager.loadCharacter(sheet);bitmap.smooth=false;
         if(!bitmap.isReady())return;
         fx=ensure(sprite,bitmap);fx.root.visible=true;
+        // Dash frames, trail positions and wind lines already use map pixels.
+        fx.root.scale.set(1/(sprite._kudasaiTextureScale||1));
         var frameCount=Graphics.frameCount;
         if(pose){
             if(fx.pose!==pose){fx.history=[];fx.lastAge=-1;fx.pose=pose;}
